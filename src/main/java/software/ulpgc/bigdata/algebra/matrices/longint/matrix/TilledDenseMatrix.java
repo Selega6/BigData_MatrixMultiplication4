@@ -1,24 +1,29 @@
 package software.ulpgc.bigdata.algebra.matrices.longint.matrix;
 
+import software.ulpgc.bigdata.algebra.matrices.longint.Matrix;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TilledDenseMatrix {
+public class TilledDenseMatrix implements Matrix {
 
-    private final DenseMatrix matrix;
     private final int size;
-    private final int tileSize;
+    private int tileSize;
     private final List<DenseMatrixPartition> tiles;
 
-    public TilledDenseMatrix(DenseMatrix matrix, int tileSize, List<DenseMatrixPartition> tiles) {
-        this.matrix = matrix;
-        this.size = matrix.size();
-        this.tileSize = tileSize;
+    public TilledDenseMatrix(List<DenseMatrixPartition> tiles, int size) {
+        this.tileSize = tiles.get(0).size();
         this.tiles = tiles;
+        this.size = size;
     }
 
     public int size() {
         return size;
+    }
+
+    @Override
+    public long get(int i, int j) {
+        return getPartition(i/tileSize, j/tileSize).get(i%tileSize, j%tileSize);
     }
 
     public int tileSize() {
