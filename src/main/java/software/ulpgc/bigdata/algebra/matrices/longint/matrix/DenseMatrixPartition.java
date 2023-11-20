@@ -5,11 +5,13 @@ import software.ulpgc.bigdata.algebra.matrices.longint.Matrix;
 public class DenseMatrixPartition implements Matrix {
 
     private final long[][] values;
-    private final int Id;
+    private final int rowId;
+    private final int columnId;
 
-    public DenseMatrixPartition(long[][] values, int Id) {
+    public DenseMatrixPartition(long[][] values, int rowId, int columnId) {
         this.values = values;
-        this.Id = Id;
+        this.rowId = rowId;
+        this.columnId = columnId;
     }
 
     @Override
@@ -31,7 +33,12 @@ public class DenseMatrixPartition implements Matrix {
             System.out.println(java.util.Arrays.toString(row));
         }
     }
-    public int Id() {
-        return Id;
+
+    public int getRowId() {
+        return rowId;
+    }
+
+    public int getColumnId() {
+        return columnId;
     }
 }
