@@ -19,7 +19,8 @@ public class DenseMatrixPartitionBuilder implements MatrixBuilder {
 
     @Override
     public void set(int i, int j, long value) {
-        values[i][j] = value;
+        values[i][j]+= value;
+        //setPartitionId(i, j);
     }
 
     @Override
@@ -41,5 +42,9 @@ public class DenseMatrixPartitionBuilder implements MatrixBuilder {
 
     public int size() {
         return size;
+    }
+
+    public long[][] getValues() {
+        return values;
     }
 }

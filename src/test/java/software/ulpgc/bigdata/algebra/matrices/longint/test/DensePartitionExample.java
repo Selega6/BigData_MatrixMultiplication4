@@ -37,5 +37,6 @@ public class DensePartitionExample {
         };
         DensePartitionExample densePartitionExample = new DensePartitionExample(prueba, prueba2);
         densePartitionExample.testMultiplicaton().printMatrix(densePartitionExample.testMultiplicaton());
+
     }
 }

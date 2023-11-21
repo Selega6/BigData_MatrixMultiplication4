@@ -1,6 +1,7 @@
 package software.ulpgc.bigdata.algebra.matrices.longint.matrix;
 
 import software.ulpgc.bigdata.algebra.matrices.longint.Matrix;
+import software.ulpgc.bigdata.algebra.matrices.longint.matrixbuilders.DenseMatrixBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,9 @@ public class TilledDenseMatrix implements Matrix {
 
     @Override
     public long get(int i, int j) {
-        return getPartition(i/tileSize, j/tileSize).get(i%tileSize, j%tileSize);
+        int rowId = Math.round(i/tileSize);
+        int colId = Math.round(j/tileSize);
+        return getPartition(i/tileSize,j/tileSize).get(i%tileSize, j%tileSize);
     }
 
     public int tileSize() {
@@ -68,5 +71,25 @@ public class TilledDenseMatrix implements Matrix {
             }
         }
         return null;
+    }
+
+    public DenseMatrix unify(){
+        DenseMatrixBuilder denseMatrixBuilder = new DenseMatrixBuilder(size);
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                denseMatrixBuilder.set(i, j, get(i, j));
+            }
+        }
+        return (DenseMatrix) denseMatrixBuilder.get();
+    }
+
+    public List<DenseMatrixPartition> getPartitions() {
+        return tiles;
+    }
+    public int getTotalRows() {
+        return tiles.size();
+    }
+    public int getTotalColumns() {
+        return tiles.size();
     }
 }
