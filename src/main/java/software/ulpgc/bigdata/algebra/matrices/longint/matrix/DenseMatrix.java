@@ -19,11 +19,11 @@ public class DenseMatrix implements Matrix {
         return values[i][j];
     }
 
-    public void printMatrix(DenseMatrix matrix){
-        long[] row = new long[matrix.size()];
-        for (int i = 0; i < matrix.size(); i++) {
-            for (int j = 0; j < matrix.size(); j++) {
-                row[j] = matrix.get(i, j);
+    public void printMatrix(){
+        long[] row = new long[values.length];
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values.length; j++) {
+                row[j] = get(i, j);
             }
             System.out.println(java.util.Arrays.toString(row));
         }

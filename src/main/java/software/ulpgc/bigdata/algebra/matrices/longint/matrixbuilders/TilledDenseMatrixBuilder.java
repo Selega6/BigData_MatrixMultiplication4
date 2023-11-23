@@ -53,9 +53,8 @@ public class TilledDenseMatrixBuilder implements MatrixBuilder {
         for (int i = 0; i < blockSize; i++) {
             for (int j = 0; j < blockSize; j++) {
                 denseMatrixBuilder.set(i, j, matrix.get(rowStart +i , colStart+j));
-                //set PartitionId only in first iteration
                 if (i == 0 && j == 0) {
-                    System.out.println("rowStart: " + rowStart + " colStart: " + colStart);
+                    //System.out.println("rowStart: " + rowStart + " colStart: " + colStart);
                     denseMatrixBuilder.setPartitionId(idRow, idCol);
                 }
             }

@@ -3,6 +3,7 @@ package software.ulpgc.bigdata.algebra.matrices.longint.test;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrix.DenseMatrix;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrix.DenseMatrixPartition;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrix.TilledDenseMatrix;
+import software.ulpgc.bigdata.algebra.matrices.longint.matrixbuilders.DenseMatrixPartitionBuilder;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrixbuilders.TilledDenseMatrixBuilder;
 import software.ulpgc.bigdata.algebra.matrices.longint.operators.DenseMatrixParallelOperator;
 
@@ -34,7 +35,7 @@ public class DensePartitionTest {
             //System.out.println(partition.getRowId() + " " + partition.getColumnId());
         }
         DenseMatrix matrix2 = tilledMatrix.unify();
-        matrix2.printMatrix(matrix2);
+        matrix2.printMatrix();
         System.out.println(isSame(matrix, tilledMatrix));
         DenseMatrixPartition partition = tilledMatrix.getPartition(1, 0);
         partition.printMatrix();
@@ -42,7 +43,7 @@ public class DensePartitionTest {
         DenseMatrixPartition partition2 = tilledMatrix.getPartition(1, 1);
         partition2.printMatrix();
         System.out.println(partition2.getRowId() + " " + partition2.getColumnId());
-        DenseMatrixPartition partition3 = DenseMatrixParallelOperator.multiplyPartition(partition, partition2);
+        DenseMatrixPartition partition3 = DenseMatrixParallelOperator.multiplyPartition(partition, partition2, new DenseMatrixPartitionBuilder(2));
         partition3.printMatrix();
         System.out.println(tilledMatrix.getRow(0).size());
     }

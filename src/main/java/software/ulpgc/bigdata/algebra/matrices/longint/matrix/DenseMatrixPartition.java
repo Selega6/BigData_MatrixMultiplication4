@@ -42,4 +42,7 @@ public class DenseMatrixPartition implements Matrix {
         return columnId;
     }
 
+    public int[] getId() {
+        return new int[]{rowId, columnId};
+    }
 }

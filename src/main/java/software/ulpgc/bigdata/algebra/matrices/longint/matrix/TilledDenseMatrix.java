@@ -26,7 +26,8 @@ public class TilledDenseMatrix implements Matrix {
     public long get(int i, int j) {
         int rowId = Math.round(i/tileSize);
         int colId = Math.round(j/tileSize);
-        return getPartition(i/tileSize,j/tileSize).get(i%tileSize, j%tileSize);
+        //System.out.println("get_i " + i%tileSize + " get_j " + j%tileSize);
+        return getPartition(rowId,colId).get(i%tileSize, j%tileSize);
     }
 
     public int tileSize() {
@@ -70,6 +71,7 @@ public class TilledDenseMatrix implements Matrix {
                 return tile;
             }
         }
+        //System.out.println("rowId: " + rowId + " ColumnId: " + ColumnId);
         return null;
     }
 
