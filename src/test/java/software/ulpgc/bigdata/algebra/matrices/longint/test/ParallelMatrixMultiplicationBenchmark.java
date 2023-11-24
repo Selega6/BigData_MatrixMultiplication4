@@ -5,7 +5,7 @@ import org.openjdk.jmh.infra.Blackhole;
 import software.ulpgc.bigdata.algebra.matrices.longint.MatrixOperations;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrix.DenseMatrix;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrixbuilders.DenseMatrixBuilder;
-import software.ulpgc.bigdata.algebra.matrices.longint.operators.DenseMatrixParallelOperator;
+import software.ulpgc.bigdata.algebra.matrices.longint.operators.TilledDenseMatrixParallelOperator;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +15,7 @@ public class ParallelMatrixMultiplicationBenchmark {
     private static final int SIZE = 1024;
     static DenseMatrix matrix1;
     static DenseMatrix matrix2;
-    static DenseMatrixParallelOperator operator = new DenseMatrixParallelOperator();
+    static TilledDenseMatrixParallelOperator operator = new TilledDenseMatrixParallelOperator();
     static MatrixOperations operations = new MatrixOperations();
 
     @Setup

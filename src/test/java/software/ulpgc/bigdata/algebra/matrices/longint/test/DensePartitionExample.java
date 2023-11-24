@@ -3,12 +3,14 @@ package software.ulpgc.bigdata.algebra.matrices.longint.test;
 import software.ulpgc.bigdata.algebra.matrices.longint.MatrixOperations;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrix.DenseMatrix;
 import software.ulpgc.bigdata.algebra.matrices.longint.operators.DenseMatrixParallelOperator;
+import software.ulpgc.bigdata.algebra.matrices.longint.operators.TilledDenseMatrixParallelOperator;
 
 public class DensePartitionExample {
     private final DenseMatrix matrix;
     private final DenseMatrix matrix2;
     private final MatrixOperations multiplier;
-    private final DenseMatrixParallelOperator parallelMultiplier;
+    private final TilledDenseMatrixParallelOperator parallelMultiplier;
+    private final DenseMatrixParallelOperator parallelMultiplier2;
     long[][] prueba = this.prueba;
     long[][] prueba2 = this.prueba2;
 
@@ -18,7 +20,8 @@ public class DensePartitionExample {
         this.matrix = new DenseMatrix(prueba);
         this.matrix2 = new DenseMatrix(prueba2);
         this.multiplier = new MatrixOperations();
-        this.parallelMultiplier = new DenseMatrixParallelOperator();
+        this.parallelMultiplier = new TilledDenseMatrixParallelOperator();
+        this.parallelMultiplier2 = new DenseMatrixParallelOperator(matrix, matrix2);
     }
 
     public DenseMatrix testMultiplicaton() {
@@ -28,10 +31,13 @@ public class DensePartitionExample {
     public DenseMatrix testParallelMultiplicaton() {
         return (DenseMatrix) parallelMultiplier.multiply(matrix, matrix2);
     }
+    public DenseMatrix testSecondParallelMultiplicaton() {
+        return (DenseMatrix) parallelMultiplier2.multiply();
+    }
     public boolean isMultiplicationEqual() {
         for (int i = 0; i < prueba.length; i++) {
             for (int j = 0; j < prueba.length; j++) {
-                if (testMultiplicaton().get(i, j) != testParallelMultiplicaton().get(i, j)) {
+                if (testMultiplicaton().get(i, j) != testParallelMultiplicaton().get(i, j) || testMultiplicaton().get(i, j) != testSecondParallelMultiplicaton().get(i, j)) {
                     return false;
                 }
             }
@@ -48,20 +54,31 @@ public class DensePartitionExample {
     }
 
     private static void BigMatricesComparisonTests() {
-        int[] size = new int[]{256, 512, 768, 3072};
+        int[] size = new int[]{128, 256, 512,768, 1024,1536, 2048,3072, 4096};
         long[] commonTimes = new long[size.length];
         long[] parallelTimes = new long[size.length];
+        long[] parallelTimes2 = new long[size.length];
         for (int i = 0; i < size.length; i++) {
             long[][] matrix1 = setRandomValues(size[i]);
             long[][] matrix2 = setRandomValues(size[i]);
             DensePartitionExample densePartitionExample = new DensePartitionExample(matrix1, matrix2);
             System.out.println("Matrices size: " + size[i]);
             addCommonTime(commonTimes, i, densePartitionExample);
-            System.out.println("Parallel Dense Matrix");
+            System.out.println("Parallel Dense Matrix with tiles Implementation");
             addParallelTime(parallelTimes, i, densePartitionExample);
+            System.out.println("Parallel Dense Matrix 2");
+            addSecondParallelTime(parallelTimes2, i, densePartitionExample);
             System.out.println("Common Dense Matrix times: " + commonTimes[i]);
-            System.out.println("Parallel Dense Matrix times: " + parallelTimes[i]);
+            System.out.println("Tilled Dense Matrix times: " + parallelTimes[i]);
+            System.out.println("Parallel Dense Matrix times: " + parallelTimes2[i]);
         }
+    }
+
+    private static void addSecondParallelTime(long[] parallelTimes, int i, DensePartitionExample densePartitionExample) {
+        long start = System.currentTimeMillis();
+        densePartitionExample.testSecondParallelMultiplicaton();
+        long end = System.currentTimeMillis();
+        parallelTimes[i] = (end - start) / 1000;
     }
 
     private static void addParallelTime(long[] parallelTimes, int i, DensePartitionExample densePartitionExample) {

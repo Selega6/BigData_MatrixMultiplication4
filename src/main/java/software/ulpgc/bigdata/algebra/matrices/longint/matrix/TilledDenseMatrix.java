@@ -94,4 +94,13 @@ public class TilledDenseMatrix implements Matrix {
     public int getTotalColumns() {
         return tiles.size();
     }
+    public void printMatrix() {
+        long[] row = new long[size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                row[j] = get(i, j);
+            }
+            System.out.println(java.util.Arrays.toString(row));
+        }
+    }
 }
