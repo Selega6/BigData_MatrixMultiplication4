@@ -1,60 +1,68 @@
 package software.ulpgc.bigdata.algebra.matrices.longint.test;
 
+import software.ulpgc.bigdata.algebra.matrices.longint.MatrixOperations;
 import software.ulpgc.bigdata.algebra.matrices.longint.matrix.DenseMatrix;
-import software.ulpgc.bigdata.algebra.matrices.longint.matrix.DenseMatrixPartition;
-import software.ulpgc.bigdata.algebra.matrices.longint.matrix.TilledDenseMatrix;
-import software.ulpgc.bigdata.algebra.matrices.longint.matrixbuilders.DenseMatrixPartitionBuilder;
-import software.ulpgc.bigdata.algebra.matrices.longint.matrixbuilders.TilledDenseMatrixBuilder;
 import software.ulpgc.bigdata.algebra.matrices.longint.operators.DenseMatrixParallelOperator;
 
-import java.util.List;
+import static software.ulpgc.bigdata.algebra.matrices.longint.test.DensePartitionExample.setRandomValues;
 
 public class DensePartitionTest {
-    public static void main(String[] args) {
-        long[][] prueba = {
-                {1, 0, 6, 0},
-                {0, 2, 0, 7},
-                {0, 0, 3, 0},
-                {5, 0, 0, 4}
-        };
-        long[][] prueba2 = {
-                {1, 0, 6, 0, 6, 0},
-                {0, 2, 0, 7, 6, 0},
-                {0, 0, 3, 0, 6, 0},
-                {5, 0, 0, 4, 6, 0},
-                {5, 0, 0, 4, 6, 0},
-                {5, 0, 0, 4, 6, 0}
-        };
-        DenseMatrix matrix = new DenseMatrix(prueba2);
-        TilledDenseMatrixBuilder builder = new TilledDenseMatrixBuilder(matrix);
-        builder.set(0, 0, 1);
-        TilledDenseMatrix tilledMatrix = (TilledDenseMatrix) builder.get();
-        System.out.println(tilledMatrix.getRow(0).size());
-        List< DenseMatrixPartition> partitions = tilledMatrix.getPartitions();
-        for (DenseMatrixPartition partition : partitions) {
-            //System.out.println(partition.getRowId() + " " + partition.getColumnId());
+    private static final int[] size = new int[]{4, 16};
+    private static final DenseMatrixParallelOperator denseMatrixParallelOperator = new DenseMatrixParallelOperator();
+    private static final MatrixOperations matrixOperations= new MatrixOperations();
+    //private static final ParallelMatrixMultiplicationBenchmark benchmark = new ParallelMatrixMultiplicationBenchmark();
+    static long[] timesWithoutThreads = new long[size.length];
+    static long[] timesWithThreads = new long[size.length];
+    static boolean[] isEqual = new boolean[size.length];
+
+    public static void test(){
+        for (int i = 0; i < size.length; i++) {
+            DenseMatrix denseMatrixA = new DenseMatrix(setRandomValues(size[i]));
+            DenseMatrix denseMatrixB = new DenseMatrix(setRandomValues(size[i]));
+            DenseMatrix common = testNormalMultiplication(i, denseMatrixA, denseMatrixB);
+            common.printMatrix();
+            DenseMatrix parallel = testParallel(i, denseMatrixA, denseMatrixB);
+            parallel.printMatrix();
+            isEqual[i] = isMultiplicationEqual(size[i], common, parallel);
         }
-        DenseMatrix matrix2 = tilledMatrix.unify();
-        matrix2.printMatrix();
-        System.out.println(isSame(matrix, tilledMatrix));
-        DenseMatrixPartition partition = tilledMatrix.getPartition(1, 0);
-        partition.printMatrix();
-        System.out.println(partition.getRowId() + " " + partition.getColumnId());
-        DenseMatrixPartition partition2 = tilledMatrix.getPartition(1, 1);
-        partition2.printMatrix();
-        System.out.println(partition2.getRowId() + " " + partition2.getColumnId());
-        DenseMatrixPartition partition3 = DenseMatrixParallelOperator.multiplyPartition(partition, partition2, new DenseMatrixPartitionBuilder(2));
-        partition3.printMatrix();
-        System.out.println(tilledMatrix.getRow(0).size());
     }
-    private static boolean isSame(DenseMatrix matrix, TilledDenseMatrix matrix2) {
-        for (int i = 0; i < matrix.size(); i++) {
-            for (int j = 0; j < matrix.size(); j++) {
-                if (matrix.get(i, j) != matrix2.get(i, j)) {
+    public static boolean isMultiplicationEqual(int size, DenseMatrix denseMatrixA, DenseMatrix denseMatrixB) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (denseMatrixA.get(i, j) != denseMatrixB.get(i, j)) {
                     return false;
                 }
             }
         }
-        return true; //TODO: change it
+        return true;
+    }
+    private static DenseMatrix testNormalMultiplication(int i, DenseMatrix denseMatrixA, DenseMatrix denseMatrixB) {
+        long start = System.currentTimeMillis();
+        DenseMatrix res= matrixOperations.multiplyDenseMatrix(denseMatrixA, denseMatrixB);
+        long end = System.currentTimeMillis();
+        timesWithoutThreads[i] = end - start;
+        return res;
+    }
+
+    private static DenseMatrix testParallel(int i, DenseMatrix denseMatrixA, DenseMatrix denseMatrixB) {
+        long start = System.currentTimeMillis();
+        DenseMatrix res = (DenseMatrix) denseMatrixParallelOperator.multiply(denseMatrixA, denseMatrixB);
+        long end = System.currentTimeMillis();
+        timesWithThreads[i] = end - start;
+        return res;
+    }
+
+    public static void main(String[] args) {
+        test();
+        display();
+    }
+
+    private static void display() {
+        for (int i = 0; i < size.length; i++) {
+            System.out.println("Size: " + size[i]);
+            System.out.println("Time without threads: " + timesWithoutThreads[i]);
+            System.out.println("Time with threads: " + timesWithThreads[i]);
+            System.out.println("Is equal: " + isEqual[i]);
+        }
     }
 }

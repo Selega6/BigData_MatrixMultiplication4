@@ -13,8 +13,9 @@ public class TilledDenseMatrixBuilder implements MatrixBuilder {
 
     private final int size;
     private DenseMatrix matrix;
-    private final int blockSize; //TODO: change it probably
+    private final int blockSize;
     private List<DenseMatrixPartition> partitions = new ArrayList<>();
+    private final int maxPartitions = 16;
 
     public TilledDenseMatrixBuilder(DenseMatrix matrix) {
         this.matrix = matrix;
@@ -33,10 +34,10 @@ public class TilledDenseMatrixBuilder implements MatrixBuilder {
     }
 
     public int setNumberOfPartitions() {
-        int numberOfThreads =  Runtime.getRuntime().availableProcessors();
-        int numberOfPartitions = numberOfThreads*2;
+        int numberOfThreads = Runtime.getRuntime().availableProcessors();
+        int numberOfPartitions = numberOfThreads * 2;
         while (numberOfPartitions > 0) {
-            if (size % numberOfPartitions == 0 && size/ numberOfPartitions > 1) {
+            if (size % numberOfPartitions == 0 && size / numberOfPartitions > 1 && numberOfPartitions <= maxPartitions) {
                 return numberOfPartitions;
             }
             numberOfPartitions--;
@@ -54,7 +55,6 @@ public class TilledDenseMatrixBuilder implements MatrixBuilder {
             for (int j = 0; j < blockSize; j++) {
                 denseMatrixBuilder.set(i, j, matrix.get(rowStart +i , colStart+j));
                 if (i == 0 && j == 0) {
-                    //System.out.println("rowStart: " + rowStart + " colStart: " + colStart);
                     denseMatrixBuilder.setPartitionId(idRow, idCol);
                 }
             }

@@ -28,4 +28,14 @@ public class DenseMatrix implements Matrix {
             System.out.println(java.util.Arrays.toString(row));
         }
     }
+    public DenseMatrix transpose() {
+        long[][] transposedValues = new long[values.length][values.length];
+        for (int i = 0; i < values.length; i++) {
+            for (int j = i; j < values.length; j++) {
+                transposedValues[i][j] = values[j][i];
+                transposedValues[j][i] = values[i][j];
+            }
+        }
+        return new DenseMatrix(transposedValues);
+    }
 }
