@@ -10,6 +10,8 @@ import software.ulpgc.bigdata.algebra.matrices.longint.operators.TilledDenseMatr
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static software.ulpgc.bigdata.algebra.matrices.longint.test.DensePartitionExample.setRandomValues;
+
 @State(Scope.Thread)
 public class ParallelMatrixMultiplicationBenchmark {
     private static final int SIZE = 1024;
@@ -46,7 +48,7 @@ public class ParallelMatrixMultiplicationBenchmark {
         long elapsedTimeInSeconds = 0;
         try {
             long startTime = System.currentTimeMillis();
-            DenseMatrix sol = (DenseMatrix) operator.multiply(matrix1, matrix2);
+            operator.multiply(matrix1, matrix2);
             long endTime = System.currentTimeMillis();
             elapsedTimeInSeconds = (endTime - startTime) / 1000;
         } catch (Exception e) {
@@ -55,6 +57,8 @@ public class ParallelMatrixMultiplicationBenchmark {
         bh.consume(elapsedTimeInSeconds);
     }
     public static void main(String[] args) throws Exception {
+        DenseMatrix matrix1 = new DenseMatrix(setRandomValues(SIZE));
+        DenseMatrix matrix2 = new DenseMatrix(setRandomValues(SIZE));
         DenseMatrix common=  operations.multiplyDenseMatrix(matrix1, matrix2);
         DenseMatrix parallel = (DenseMatrix) operator.multiply(matrix1, matrix2);
         boolean failureDetection = isSame(common, parallel);
