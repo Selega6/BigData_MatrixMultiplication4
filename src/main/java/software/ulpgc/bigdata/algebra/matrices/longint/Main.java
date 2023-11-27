@@ -7,6 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        //SparsedMatrixRun();
+    }
+
+    private static void SparsedMatrixRun() throws IOException {
         MTXMatrixReader reader = new MTXMatrixReader();
         String path = "mc2depi\\mc2depi.mtx";
         Controller controller = new Controller(reader, path);
