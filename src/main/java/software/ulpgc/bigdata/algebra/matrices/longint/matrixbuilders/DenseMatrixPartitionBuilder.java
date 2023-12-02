@@ -19,10 +19,11 @@ public class DenseMatrixPartitionBuilder implements MatrixBuilder {
 
     @Override
     public void set(int i, int j, long value) {
-        values[i][j]= value;
+        values[i][j] = value;
     }
+
     public void add(int i, int j, long value) {
-        values[i][j]+= value;
+        values[i][j] += value;
     }
 
     @Override
@@ -33,6 +34,7 @@ public class DenseMatrixPartitionBuilder implements MatrixBuilder {
     private void setRowId(int rowId) {
         this.rowId = rowId;
     }
+
     private void setColumnId(int columnId) {
         this.columnId = columnId;
     }

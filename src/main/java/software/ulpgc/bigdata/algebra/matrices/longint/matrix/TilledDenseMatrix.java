@@ -24,10 +24,9 @@ public class TilledDenseMatrix implements Matrix {
 
     @Override
     public long get(int i, int j) {
-        int rowId = Math.round(i/tileSize);
-        int colId = Math.round(j/tileSize);
-        //System.out.println("get_i " + i%tileSize + " get_j " + j%tileSize);
-        return getPartition(rowId,colId).get(i%tileSize, j%tileSize);
+        int rowId = Math.round(i / tileSize);
+        int colId = Math.round(j / tileSize);
+        return getPartition(rowId, colId).get(i % tileSize, j % tileSize);
     }
 
     public int tileSize() {
@@ -47,7 +46,7 @@ public class TilledDenseMatrix implements Matrix {
         return row;
     }
 
-    public List<DenseMatrixPartition> getColumn(int columnId){
+    public List<DenseMatrixPartition> getColumn(int columnId) {
         List<DenseMatrixPartition> column = new ArrayList<>();
         if (columnId < 0 || columnId >= size) {
             throw new IllegalArgumentException("Column index out of bounds");
@@ -59,7 +58,8 @@ public class TilledDenseMatrix implements Matrix {
         }
         return column;
     }
-    public DenseMatrixPartition getPartition(int rowId, int ColumnId){
+
+    public DenseMatrixPartition getPartition(int rowId, int ColumnId) {
         if (rowId < 0 || rowId >= size) {
             throw new IllegalArgumentException("Row index out of bounds");
         }
@@ -71,11 +71,10 @@ public class TilledDenseMatrix implements Matrix {
                 return tile;
             }
         }
-        //System.out.println("rowId: " + rowId + " ColumnId: " + ColumnId);
         return null;
     }
 
-    public DenseMatrix unify(){
+    public DenseMatrix unify() {
         DenseMatrixBuilder denseMatrixBuilder = new DenseMatrixBuilder(size);
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -88,12 +87,15 @@ public class TilledDenseMatrix implements Matrix {
     public List<DenseMatrixPartition> getPartitions() {
         return tiles;
     }
+
     public int getTotalRows() {
         return tiles.size();
     }
+
     public int getTotalColumns() {
         return tiles.size();
     }
+
     public void printMatrix() {
         long[] row = new long[size];
         for (int i = 0; i < size; i++) {
