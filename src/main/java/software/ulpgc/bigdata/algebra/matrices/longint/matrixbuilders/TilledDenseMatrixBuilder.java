@@ -35,7 +35,13 @@ public class TilledDenseMatrixBuilder implements MatrixBuilder {
 
     public int setNumberOfPartitions() {
         int numberOfThreads = Runtime.getRuntime().availableProcessors();
-        int numberOfPartitions = numberOfThreads * 2;
+        int numberOfPartitions;
+        if (numberOfThreads >= maxPartitions) {
+            numberOfPartitions = maxPartitions;
+        }
+        else {
+            numberOfPartitions = numberOfThreads*2;
+        }
         while (numberOfPartitions > 0) {
             if (size % numberOfPartitions == 0 && size / numberOfPartitions > 1 && numberOfPartitions <= maxPartitions) {
                 return numberOfPartitions;
