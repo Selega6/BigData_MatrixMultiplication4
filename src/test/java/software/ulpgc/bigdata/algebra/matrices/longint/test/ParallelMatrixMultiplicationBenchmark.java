@@ -25,6 +25,7 @@ public class ParallelMatrixMultiplicationBenchmark {
         matrix1 = setRandomDenseMatrix(SIZE);
         matrix2 = matrix1.transpose();
     }
+
     @Benchmark
     @BenchmarkMode({Mode.Throughput, Mode.AverageTime})
     @OutputTimeUnit(TimeUnit.SECONDS)
@@ -41,6 +42,7 @@ public class ParallelMatrixMultiplicationBenchmark {
         }
         bh.consume(elapsedTimeInSeconds);
     }
+
     @Benchmark
     @BenchmarkMode({Mode.Throughput, Mode.AverageTime})
     @OutputTimeUnit(TimeUnit.SECONDS)
@@ -56,15 +58,17 @@ public class ParallelMatrixMultiplicationBenchmark {
         }
         bh.consume(elapsedTimeInSeconds);
     }
+
     public static void main(String[] args) throws Exception {
         DenseMatrix matrix1 = new DenseMatrix(setRandomValues(SIZE));
         DenseMatrix matrix2 = new DenseMatrix(setRandomValues(SIZE));
-        DenseMatrix common=  operations.multiplyDenseMatrix(matrix1, matrix2);
+        DenseMatrix common = operations.multiplyDenseMatrix(matrix1, matrix2);
         DenseMatrix parallel = (DenseMatrix) operator.multiply(matrix1, matrix2);
         boolean failureDetection = isSame(common, parallel);
         System.out.println("Are matrices equal? " + failureDetection);
         org.openjdk.jmh.Main.main(args);
     }
+
     public DenseMatrix setRandomDenseMatrix(int size) {
         DenseMatrixBuilder builder = new DenseMatrixBuilder(size);
         Random random = new Random();

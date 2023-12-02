@@ -31,9 +31,11 @@ public class DensePartitionExample {
     public DenseMatrix testParallelMultiplicaton() {
         return (DenseMatrix) parallelMultiplier.multiply(matrix, matrix2);
     }
+
     public DenseMatrix testSecondParallelMultiplicaton() {
         return (DenseMatrix) parallelMultiplier2.multiply();
     }
+
     public boolean isMultiplicationEqual() {
         for (int i = 0; i < prueba.length; i++) {
             for (int j = 0; j < prueba.length; j++) {
@@ -44,6 +46,7 @@ public class DensePartitionExample {
         }
         return true;
     }
+
     public static void main(String[] args) {
         System.out.println("Dense Partition Example");
         //EasyTestFromLecture();
@@ -54,7 +57,7 @@ public class DensePartitionExample {
     }
 
     private static void BigMatricesComparisonTests() {
-        int[] size = new int[]{128, 256, 512,768, 1024,1536, 2048,3072, 4096};
+        int[] size = new int[]{128, 256, 512, 768, 1024, 1536, 2048, 3072, 4096};
         long[] commonTimes = new long[size.length];
         long[] parallelTimes = new long[size.length];
         long[] parallelTimes2 = new long[size.length];
@@ -92,7 +95,7 @@ public class DensePartitionExample {
         long start = System.currentTimeMillis();
         densePartitionExample.testMultiplicaton();
         long end = System.currentTimeMillis();
-        commonTimes[i] = (end - start)/1000;
+        commonTimes[i] = (end - start) / 1000;
     }
 
     private static void IsEqualTests() {

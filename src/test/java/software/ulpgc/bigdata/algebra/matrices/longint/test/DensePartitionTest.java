@@ -10,22 +10,19 @@ import static software.ulpgc.bigdata.algebra.matrices.longint.test.DensePartitio
 public class DensePartitionTest {
     private static final int[] size = new int[]{4, 16};
     private static final TilledDenseMatrixParallelOperator TILLED_DENSE_MATRIX_PARALLEL_OPERATOR = new TilledDenseMatrixParallelOperator();
-    private static final MatrixOperations matrixOperations= new MatrixOperations();
-    //private static final ParallelMatrixMultiplicationBenchmark benchmark = new ParallelMatrixMultiplicationBenchmark();
+    private static final MatrixOperations matrixOperations = new MatrixOperations();
     static long[] timesWithoutThreads = new long[size.length];
     static long[] timesWithThreads = new long[size.length];
     static long[] timesWithThreads2 = new long[size.length];
     static boolean[] isEqual = new boolean[size.length];
     static boolean[] isEqual2 = new boolean[size.length];
 
-    public static void test(){
+    public static void test() {
         for (int i = 0; i < size.length; i++) {
             DenseMatrix denseMatrixA = new DenseMatrix(setRandomValues(size[i]));
             DenseMatrix denseMatrixB = new DenseMatrix(setRandomValues(size[i]));
             DenseMatrix common = testNormalMultiplication(i, denseMatrixA, denseMatrixB);
-            //common.printMatrix();
             DenseMatrix parallel = testParallel(i, denseMatrixA, denseMatrixB);
-            //parallel.printMatrix();
             DenseMatrix parallel2 = testSecondParallel(i, denseMatrixA, denseMatrixB);
             isEqual[i] = isMultiplicationEqual(size[i], common, parallel);
             isEqual2[i] = isMultiplicationEqual(size[i], common, parallel2);
@@ -50,9 +47,10 @@ public class DensePartitionTest {
         }
         return true;
     }
+
     private static DenseMatrix testNormalMultiplication(int i, DenseMatrix denseMatrixA, DenseMatrix denseMatrixB) {
         long start = System.currentTimeMillis();
-        DenseMatrix res= matrixOperations.multiplyDenseMatrix(denseMatrixA, denseMatrixB);
+        DenseMatrix res = matrixOperations.multiplyDenseMatrix(denseMatrixA, denseMatrixB);
         long end = System.currentTimeMillis();
         timesWithoutThreads[i] = end - start;
         return res;
